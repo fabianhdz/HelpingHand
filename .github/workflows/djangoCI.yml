@@ -15,15 +15,16 @@ jobs:
         python-version: [3.11]
 
     services:
-      mysql:
+      mysql-master:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: Dtcsci6333!
+          MYSQL_DATABASE: helpinghanddb
         ports:
           - 3306:3306
         # Set health checks to wait until mysql has started
         options: >-
+          --name=mysql-master
           --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
           --health-interval=10s
           --health-timeout=10s
@@ -55,7 +56,7 @@ jobs:
       run: cat /etc/hosts
       
     - name: View MySQL Container Logs
-      run: docker logs mysql
+      run: docker logs mysql-master
 
 
     - name: Wait for MySQL
