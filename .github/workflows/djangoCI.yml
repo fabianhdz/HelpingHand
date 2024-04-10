@@ -18,8 +18,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: mydatabase
+          MYSQL_ROOT_PASSWORD: Dtcsci6333!
+          MYSQL_DATABASE: helpinghanddb
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -45,10 +45,10 @@ jobs:
     - name: Run Tests
       env:
         MYSQL_USERNAME: root
-        MYSQL_PASSWORD: mydatabase
+        MYSQL_PASSWORD: Dtcsci6333!
         MYSQL_HOST: localhost
         MYSQL_PORT: 3306
-        MYSQL_DB: mydatabase
+        MYSQL_DB: helpinghanddb
       run: |
         python manage.py migrate
         coverage run manage.py test
