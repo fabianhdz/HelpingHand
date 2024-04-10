@@ -57,7 +57,7 @@ jobs:
       run: cat /etc/hosts
       
     - name: View MySQL Container Logs
-      run: docker logs mysql
+      run: docker logs mysql-master
 
     - name: Run Migration
       run: |
