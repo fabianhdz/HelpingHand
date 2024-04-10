@@ -1,10 +1,5 @@
 name: Django CI
-env:
-    MYSQL_DATABASE: helpinghanddb
-    MYSQL_USERNAME: root_user
-    MYSQL_PASSWORD: Dtcsci6333!
-    MYSQL_HOST: mysql-master
-    NODE_ENV: test
+
 on:
   push:
     branches: [ main ]
@@ -20,20 +15,19 @@ jobs:
         python-version: [3.11]
 
     services:
-      mysql-master:
+      mysql:
         image: mysql:5.7
-        ports:
-          - 3306/tcp
         env:
-          MYSQL_DATABASE: ${{ env.MYSQL_DATABASE }}
-          MYSQL_USERNAME: ${{ env.MYSQL_USERNAME }}
-          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        # Set health checks to wait until mysql has started
         options: >-
-          --name=mysql-master
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
           --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+          --health-timeout=10s
+          --health-retries=10
         
 
     steps:
@@ -57,7 +51,15 @@ jobs:
       run: cat /etc/hosts
       
     - name: View MySQL Container Logs
-      run: docker logs mysql-master
+      run: docker logs mysql
+
+    - name: Install MySQL client
+      run: sudo apt-get install default-mysql-client
+    - name: Wait for MySQL
+      run: |
+        until mysql -h 127.0.0.1 -uroot -proot -e "SELECT 1"; do
+          sleep 1
+        done
 
     - name: Run Migration
       run: |
