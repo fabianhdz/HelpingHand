@@ -1,4 +1,10 @@
 name: Django CI
+env:
+    MYSQL_DATABASE: helpinghanddb
+    MYSQL_USERNAME: root
+    MYSQL_PASSWORD: Dtcsci6333!
+    MYSQL_HOST: mysql
+    NODE_ENV: test
 
 on:
   push:
@@ -18,11 +24,19 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: Dtcsci6333!
-          MYSQL_DATABASE: helpinghanddb
+          MYSQL_DATABASE: ${{ env.MYSQL_DATABASE }}
+          MYSQL_USERNAME: ${{ env.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_PASSWORD }}
+        options: >-
+          --name=mysql
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
         ports:
           - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+        
 
     steps:
     - uses: actions/checkout@v2
@@ -41,14 +55,10 @@ jobs:
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=119 --statistics
+    - name: Run Migration
+      run: |
+        python manage.py migrate
 
     - name: Run Tests
-      env:
-        MYSQL_ENGINE: django.db.backends.mysql
-        MYSQL_DB: helpinghanddb
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: Dtcsci6333!
-        MYSQL_HOST: localhost
       run: | 
-        python manage.py migrate
         coverage run manage.py test
