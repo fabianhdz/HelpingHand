@@ -37,6 +37,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+        
+    - name: Install MySQL client
+      run: sudo apt-get install default-mysql-client
 
     - name: Install Dependencies
       run: |
@@ -47,14 +50,14 @@ jobs:
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=119 --statistics
+        
     - name: Debug MySQL Connection
       run: cat /etc/hosts
       
     - name: View MySQL Container Logs
       run: docker logs mysql
 
-    - name: Install MySQL client
-      run: sudo apt-get install default-mysql-client
+
     - name: Wait for MySQL
       run: |
         until mysql -h 127.0.0.1 -uroot -proot -e "SELECT 1"; do
