@@ -40,16 +40,16 @@ jobs:
     - name: Run Flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=119 --statistics
 
     - name: Run Tests
       env:
+        MYSQL_ENGINE: django.db.backends.mysql
+        MYSQL_DB: helpinghanddb
         MYSQL_USERNAME: root
         MYSQL_PASSWORD: Dtcsci6333!
         MYSQL_HOST: localhost
         MYSQL_PORT: 3306
-        MYSQL_DB: helpinghanddb
-      run: |
-        sudo systemctl start mysql
+      run: | 
         python manage.py migrate
         coverage run manage.py test
