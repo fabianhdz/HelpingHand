@@ -15,7 +15,7 @@ class User(models.Model):
 
 class Language(models.Model):
     name = models.CharField(max_length=15)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User, related_name='languages')
 
 
 class Skill(models.Model):
@@ -55,7 +55,7 @@ class Appointment(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=20)
-    users = models.ManyToManyField(User, through='Post')
+    users = models.ManyToManyField(User, through='Post', related_name='roles')
 
 
 class Post(models.Model):
@@ -65,3 +65,4 @@ class Post(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)  # Foreign key to Role
