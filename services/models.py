@@ -1,16 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
-class User(models.Model):
-    join_date = models.DateTimeField()
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
-    email = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=15)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone = models.BigIntegerField()
     language = models.CharField(max_length=15)
     address = models.CharField(max_length=50)
     zip_code = models.IntegerField()
+
+    # Example method to access full address
+    def full_address(self):
+        return f"{self.address}, {self.zip_code}"
 
 
 class Language(models.Model):
