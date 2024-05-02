@@ -40,7 +40,7 @@ class Location(models.Model):
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=100, unique = True)
+    name = models.CharField(max_length=100, unique=True)
     users = models.ManyToManyField(User, through='Post')
 
     def __str__(self):
