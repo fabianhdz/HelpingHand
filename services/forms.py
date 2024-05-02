@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile ,Post, Service, Skill, Location, Role
+from .models import Profile, Post, Role
 
 
 class SignUpForm(UserCreationForm):
@@ -26,7 +26,6 @@ class SignUpForm(UserCreationForm):
         return user
 
 
-
 class PostForm(forms.ModelForm):
     # Use ModelChoiceField to ensure the role is limited to 'Provider' or 'Client'
     ROLE_CHOICES = [
@@ -41,7 +40,6 @@ class PostForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 4}), required=True)
     price_range = forms.FloatField(required=True)
     expiration_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    
     street_address = forms.CharField(max_length=255, required=True, initial='')
     city = forms.CharField(max_length=100, required=True, initial='')
     state = forms.CharField(max_length=100, required=True, initial='')
@@ -50,9 +48,9 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = [ 'description', 'price_range', 'expiration_date']
+        fields = ['description', 'price_range', 'expiration_date']
         exclude = ['service', 'role', 'location']
 
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
-        self.fields['role'].queryset = Role.objects.exclude(name='Admin')  # Assuming 'Admin' is not a valid role for posting
+        self.fields['role'].queryset = Role.objects.exclude(name='Admin')

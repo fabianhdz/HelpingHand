@@ -3,9 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, PostForm
 from django.contrib.auth.decorators import login_required
-from .models import Service, Post, Location, Role
+from .models import Service, Location, Role
 from django.utils import timezone
-
 
 
 def home(request):
@@ -62,20 +61,19 @@ def create_post(request):
             service_name = form.cleaned_data.get('service')
             service, _ = Service.objects.get_or_create(name=service_name.capitalize())
             location, _ = Location.objects.get_or_create(
-            street_address=form.cleaned_data.get('street_address'),
-            city=form.cleaned_data.get('city'),
-            state=form.cleaned_data.get('state'),
-            postal_code=form.cleaned_data.get('postal_code'),
-            country=form.cleaned_data.get('country'))
+                            street_address=form.cleaned_data.get('street_address'),
+                            city=form.cleaned_data.get('city'),
+                            state=form.cleaned_data.get('state'),
+                            postal_code=form.cleaned_data.get('postal_code'),
+                            country=form.cleaned_data.get('country'))
 
             role_name = form.cleaned_data.get('role')
             role, _ = Role.objects.get_or_create(name=role_name.capitalize())
-            
             post = form.save(commit=False)
             post.role = role
             post.location = location
             post.service = service
-            post.user = request.user 
+            post.user = request.user
             post.date = timezone.now()
             post.save()
             form.save_m2m()  # Save any many-to-many relationships
