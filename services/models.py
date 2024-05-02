@@ -27,14 +27,24 @@ class Skill(models.Model):
 
 
 class Location(models.Model):
-    zip_code = models.IntegerField()
-    city = models.CharField(max_length=25)
-    state = models.CharField(max_length=2)
+
+    street_address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    street_address = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.street_address}, {self.city}, {self.state}, {self.postal_code}, {self.country}"
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=100, unique = True)
     users = models.ManyToManyField(User, through='Post')
+
+    def __str__(self):
+        return self.name
 
 
 class TrustFactor(models.Model):
@@ -55,7 +65,11 @@ class Appointment(models.Model):
 
 
 class Role(models.Model):
-    name = models.CharField(max_length=20)
+    ROLE_CHOICES = [
+        ('provider', 'Provider'),
+        ('client', 'Client'),
+    ]
+    name = models.CharField(max_length=20, choices=ROLE_CHOICES)
     users = models.ManyToManyField(User, through='Post', related_name='roles')
 
 
@@ -67,3 +81,4 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)  # Foreign key to Role
+    description = models.TextField()
