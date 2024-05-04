@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserForm, PostForm, ProfileForm
+from .forms import UserForm, PostForm, ProfileForm, PostFilterForm
 from django.contrib.auth.decorators import login_required
-from .models import Service, Location, Role, Skill
+from .models import Service, Location, Role, Skill, Post
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -139,3 +139,15 @@ def create_post(request):
         form = PostForm()
 
     return render(request, 'create_post.html', {'form': form})
+
+def posts_feed(request):
+    form = PostFilterForm(request.GET)
+    posts = Post.objects.all()
+
+    if form.is_valid():
+        posts = form.filter_query(posts)
+
+    return render(request, 'posts_feed.html', {
+        'form': form,
+        'posts': posts
+    })

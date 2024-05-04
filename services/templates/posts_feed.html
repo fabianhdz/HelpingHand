@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Posts Feed</h2>
+    <form method="get" class="mb-4">
+        <div class="row">
+            <!-- Each form control has a label above and the control beneath, uniformly spaced -->
+            <div class="col-md-2 mb-4">
+                {{ form.role.label_tag }}<br>
+                {{ form.role }}
+            </div>
+            <div class="col-md-2 mb-4">
+                {{ form.service.label_tag }}<br>
+                {{ form.service }}
+            </div>
+            <div class="col-md-2 mb-4">
+                {{ form.city.label_tag }}<br>
+                {{ form.city }}
+            </div>
+            <div class="col-md-2 mb-4">
+                {{ form.state.label_tag }}<br>
+                {{ form.state }}
+            </div>
+            <div class="col-md-2 mb-4">
+                {{ form.postal_code.label_tag }}<br>
+                {{ form.postal_code }}
+            </div>
+            <div class="col-md-2 mb-4">
+                {{ form.country.label_tag }}<br>
+                {{ form.country }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{% url 'posts_feed' %}" class="btn btn-secondary ml-2">Clear Filter</a>
+            </div>
+        </div>
+    </form>
+
+    <div id="postsContainer">
+        {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.service.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ post.role.name }}</h6>
+                <p class="card-text"> Description: {{ post.description }}</p>
+                <p class="card-text"><small class="text-muted">{{ post.location.city }}, {{ post.location.state }}, {{ post.location.postal_code }}, {{ post.location.country }}</small></p>
+                <a href="#" class="card-link">More details</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No posts found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -13,6 +13,8 @@ class Skill(models.Model):
     # Related_name: you can get skills for users such user = User.objects.get(id=1)
     # user_skills = user.skills.all()
 
+    def __str__(self):
+        return self.name
 
 class Location(models.Model):
 
@@ -60,6 +62,8 @@ class Role(models.Model):
     name = models.CharField(max_length=20, choices=ROLE_CHOICES)
     users = models.ManyToManyField(User, through='Post', related_name='roles')
 
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     date = models.DateTimeField()
