@@ -1,29 +1,50 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Post, Role
+from .models import Profile, Location, Post, Role
 
 
-class SignUpForm(UserCreationForm):
-    phone = forms.CharField(required=True)
-    language = forms.CharField(required=True)
-    address = forms.CharField(required=True)
-    zip_code = forms.CharField(required=True)
+class UserForm(UserCreationForm):
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
+
+class ProfileForm(forms.ModelForm):
+    street_address = forms.CharField(max_length=255, required=True)
+    city = forms.CharField(max_length=100, required=True)
+    state = forms.CharField(max_length=100, required=True)
+    postal_code = forms.CharField(max_length=20, required=True)
+    country = forms.CharField(max_length=100, required=True)
+
+    skills = forms.CharField(required=True, help_text="Enter skills separated by commas.")
+
+    class Meta:
+        model = Profile
+        fields = ['phone', 'language']
+
+    def clean_skills(self):
+        skills_str = self.cleaned_data.get('skills', '')
+        # Split the skills string by commas and strip spaces from each skill
+        skill_names = [skill.strip() for skill in skills_str.split(',') if skill.strip()]
+        return skill_names
+
     def save(self, commit=True):
-        user = super(SignUpForm, self).save(commit=False)
+        profile = super(ProfileForm, self).save(commit=False)
+        # Ensure location creation and other settings are done here
+        location = Location.objects.create(
+            street_address=self.cleaned_data['street_address'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            postal_code=self.cleaned_data['postal_code'],
+            country=self.cleaned_data['country']
+        )
+        profile.location = location
+
         if commit:
-            user.save()
-            profile = Profile(user=user, phone=self.cleaned_data['phone'],
-                              language=self.cleaned_data['language'],
-                              address=self.cleaned_data['address'],
-                              zip_code=self.cleaned_data['zip_code'])
             profile.save()
-        return user
+        return profile
 
 
 class PostForm(forms.ModelForm):

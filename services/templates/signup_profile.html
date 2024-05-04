@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2 class="mb-4 text-center">Create Account - Step 2</h2>
+            <form method="post" class="needs-validation">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="id_phone">Phone:</label>
+                    <input type="tel" name="phone" class="form-control" id="id_phone" placeholder="Phone number" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_language">Language:</label>
+                    <input type="text" name="language" class="form-control" id="id_language" placeholder="Language">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="id_street_address">Street Address:</label>
+                    <input type="text" name="street_address" class="form-control" id="id_street_address" placeholder="Street Address" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_city">City:</label>
+                    <input type="text" name="city" class="form-control" id="id_city" placeholder="City" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_state">State:</label>
+                    <input type="text" name="state" class="form-control" id="id_state" placeholder="State" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_postal_code">Postal Code:</label>
+                    <input type="text" name="postal_code" class="form-control" id="id_postal_code" placeholder="Postal Code" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_country">Country:</label>
+                    <input type="text" name="country" class="form-control" id="id_country" placeholder="Country" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_skills">Skills:</label>
+                    <input type="text" name="skills" class="form-control" id="id_skills" placeholder="Enter skills separated by commas">
+                </div>
+                <div class="form-group mb-4 px-5">
+                    <button type="submit" class="btn btn-primary w-100" name="submit_profile">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
