@@ -10,4 +10,5 @@ urlpatterns = [
     path('signup/', views.signup_user, name='signup_user'),
     path('signup/profile/', views.signup_profile, name='signup_profile'),
     path('create-post/', views.create_post, name='create_post'),
+    path('posts-feed/', views.posts_feed, name='posts_feed'),
 ]
