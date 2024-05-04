@@ -2,18 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    phone = models.BigIntegerField()
-    language = models.CharField(max_length=15)
-    address = models.CharField(max_length=50)
-    zip_code = models.IntegerField()
-
-    # Example method to access full address
-    def full_address(self):
-        return f"{self.address}, {self.zip_code}"
-
-
 class Language(models.Model):
     name = models.CharField(max_length=15)
     users = models.ManyToManyField(User, related_name='languages')
@@ -82,3 +70,11 @@ class Post(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)  # Foreign key to Role
     description = models.TextField()
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    phone = models.BigIntegerField()
+    language = models.CharField(max_length=15)
+    location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='profile')
+    skills = models.ManyToManyField(Skill, related_name='profiles')  # associate skills with profiles
