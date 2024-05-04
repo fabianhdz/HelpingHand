@@ -105,12 +105,21 @@ def create_post(request):
 
             service_name = form.cleaned_data.get('service')
             service, _ = Service.objects.get_or_create(name=service_name.capitalize())
-            location, _ = Location.objects.get_or_create(
-                            street_address=form.cleaned_data.get('street_address'),
-                            city=form.cleaned_data.get('city'),
-                            state=form.cleaned_data.get('state'),
-                            postal_code=form.cleaned_data.get('postal_code'),
-                            country=form.cleaned_data.get('country'))
+            location = Location.objects.filter(
+                                    street_address=form.cleaned_data.get('street_address'),
+                                    city=form.cleaned_data.get('city'),
+                                    state=form.cleaned_data.get('state'),
+                                    postal_code=form.cleaned_data.get('postal_code'),
+                                    country=form.cleaned_data.get('country')
+                                ).first()
+            if not location:
+                location = Location.objects.create(
+                    street_address=form.cleaned_data.get('street_address'),
+                    city=form.cleaned_data.get('city'),
+                    state=form.cleaned_data.get('state'),
+                    postal_code=form.cleaned_data.get('postal_code'),
+                    country=form.cleaned_data.get('country')
+                )
 
             role_name = form.cleaned_data.get('role')
             role, _ = Role.objects.get_or_create(name=role_name.capitalize())
