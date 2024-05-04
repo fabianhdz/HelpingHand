@@ -140,6 +140,7 @@ def create_post(request):
 
     return render(request, 'create_post.html', {'form': form})
 
+
 def posts_feed(request):
     form = PostFilterForm(request.GET)
     posts = Post.objects.all()

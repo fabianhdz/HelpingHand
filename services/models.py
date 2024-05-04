@@ -16,6 +16,7 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
+
 class Location(models.Model):
 
     street_address = models.CharField(max_length=255)
@@ -64,6 +65,7 @@ class Role(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Post(models.Model):
     date = models.DateTimeField()
