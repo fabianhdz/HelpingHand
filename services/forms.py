@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Location, Post, Role, Skill, Service
+from .models import Profile, Location, Post, Role, Service
 
 
 class UserForm(UserCreationForm):
@@ -97,5 +97,5 @@ class PostFilterForm(forms.Form):
         if self.cleaned_data['postal_code']:
             queryset = queryset.filter(location__postal_code=self.cleaned_data['postal_code'])
         if self.cleaned_data['country']:
-            queryset = queryset.filter(location__country__icontains=self.cleaned_data['country'])    
+            queryset = queryset.filter(location__country__icontains=self.cleaned_data['country'])
         return queryset
