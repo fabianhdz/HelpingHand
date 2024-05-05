@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from django.core.exceptions import ImproperlyConfigured
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l&qs!=s)*dp_3t@_2)c7539fo8#pi3w1eke)+r(%on0feo#4-o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'services',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -73,15 +77,22 @@ WSGI_APPLICATION = 'helpinghand.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = f"Set the {var_name} environment variable"
+        raise ImproperlyConfigured(error_msg)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'helpinghanddb',
-        'USER': 'root',
-        'PASSWORD': 'Dtcsci6333!',
-        'HOST': 'localhost',
-        'PORT': 3306,
+        'NAME': get_env_variable('DB_NAME'),
+        'USER': get_env_variable('DB_USER'),
+        'PASSWORD': get_env_variable('DB_PASSWORD'),
+        'HOST': get_env_variable('DB_HOST'),
+        'PORT': get_env_variable('DB_PORT'),  # ensure this is a string, e.g., '3306'
     }
 }
 
