@@ -1,0 +1,24 @@
+<!-- my_appointments.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>My Appointments</h2>
+    {% for appointment in appointments %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ appointment.post.title }}</h5>
+            <p class="card-text">{{ appointment.post.description }}</p>
+            <p><strong>Date:</strong> {{ appointment.post.date|date:"D, d M Y H:i" }}</p>
+            <!-- Cancel Button -->
+            <form method="post" action="{% url 'my_appointments' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" name="cancel_appointment" value="{{ appointment.id }}">Cancel Appointment</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <p>No appointments found.</p>
+    {% endfor %}
+</div>
+{% endblock %}
