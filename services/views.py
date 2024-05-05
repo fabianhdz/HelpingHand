@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserForm, PostForm, ProfileForm, PostFilterForm
@@ -7,7 +7,6 @@ from .models import Service, Location, Role, Skill, Post, Appointment
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden
 
 
@@ -142,6 +141,7 @@ def create_post(request):
 
     return render(request, 'create_post.html', {'form': form})
 
+
 @login_required
 def posts_feed(request):
     form = PostFilterForm(request.GET)
@@ -154,6 +154,7 @@ def posts_feed(request):
         'form': form,
         'posts': posts
     })
+
 
 @login_required
 def post_detail(request, post_id):
@@ -172,7 +173,7 @@ def make_appointment(request, post_id):
         post.save()
         return redirect('appointment_confirmation', appointment_id=appointment.id)
     else:
-        return redirect('post_detail', post_id=post_id) 
+        return redirect('post_detail', post_id=post_id)
 
 
 @login_required
@@ -192,6 +193,7 @@ def my_posts(request):
     posts = Post.objects.filter(user=request.user)
     return render(request, 'my_posts.html', {'posts': posts})
 
+
 @login_required
 def my_appointments(request):
     if request.method == 'POST' and 'cancel_appointment' in request.POST:
@@ -201,6 +203,6 @@ def my_appointments(request):
         appointment.post.save()
         appointment.delete()
         return redirect('posts_feed')
-    
+
     appointments = Appointment.objects.filter(user=request.user)
     return render(request, 'my_appointments.html', {'appointments': appointments})
