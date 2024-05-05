@@ -17,9 +17,9 @@
             <p><strong>Role:</strong> {{ post.role }}</p>
             {% if request.user != post.user %}
             <a href="{% url 'make_appointment' post.id %}" class="btn btn-primary">Make Appointment</a>
-        {% else %}
+            {% else %}
             <p class="text-muted">You cannot make an appointment for your own post.</p>
-        {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>
