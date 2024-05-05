@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserForm, PostForm, ProfileForm, PostFilterForm
+from .forms import UserForm, PostForm, ProfileForm, PostFilterForm, RatingForm
 from django.contrib.auth.decorators import login_required
 from .models import Service, Location, Role, Skill, Post, Appointment, Profile, Language
 from django.utils import timezone
@@ -202,16 +202,42 @@ def my_posts(request):
 
 @login_required
 def my_appointments(request):
-    if request.method == 'POST' and 'cancel_appointment' in request.POST:
-        appointment_id = request.POST.get('cancel_appointment')
-        appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
-        appointment.post.is_active = True  # Make the post active again
-        appointment.post.save()
-        appointment.delete()
-        return redirect('posts_feed')
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action.startswith('cancel_'):
+            appointment_id = action.split('_')[1]
+            appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+            appointment.post.is_active = True
+            appointment.post.save()
+            appointment.delete()
+            return redirect('posts_feed')
+        elif action.startswith('complete_'):
+            appointment_id = action.split('_')[1]
+            return redirect('complete_appointment', appointment_id=appointment_id)
 
     appointments = Appointment.objects.filter(user=request.user)
     return render(request, 'my_appointments.html', {'appointments': appointments})
+
+
+@login_required
+def complete_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    if request.user != appointment.user:
+        return redirect('home')  # Or handle permission error
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.user = appointment.post.user  # Assuming the post's user is the one being rated
+            rating.appointment = appointment
+            rating.save()
+            appointment.status = 'completed'  # Mark as completed
+            appointment.save()
+            return redirect('posts_feed')
+    else:
+        form = RatingForm()
+
+    return render(request, 'rate_user.html', {'form': form, 'appointment': appointment})
 
 
 @login_required
