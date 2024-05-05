@@ -1,75 +1,70 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md 8 offset-md-2">
+        <div class="col-md-8 offset-md-2">
             <h2 class="mb-3 text-center">Create a Post</h2>
             <form method="post" class="needs-validation" novalidate>
                 {% csrf_token %}
                 
                 <!-- Role Selection -->
-                <div class="form-group col-md-6 mb-3">
+                <div class="mb-3">
                     {{ form.role.errors }}
-                    <label for="{{ form.role.id_for_label }}">Role:</label>
-                    {{ form.role }}
+                    <label for="{{ form.role.id_for_label }}" class="form-label">Role:</label>
+                    {{ form.role|add_class:"form-select" }}
                 </div>
                 
                 <!-- Description Field -->
-                <div class="form-group col-md-6 mb-3">
+                <div class="mb-3">
                     {{ form.description.errors }}
-                    <label for="{{ form.description.id_for_label }}">Description:</label>
-                    {{ form.description }}
+                    <label for="{{ form.description.id_for_label }}" class="form-label">Description:</label>
+                    {{ form.description|add_class:"form-control" }}
                 </div>
                 
                 <!-- Service Name Input -->
-                <div class="form-group col-md-6 mb-3">
+                <div class="mb-3">
                     {{ form.service.errors }}
-                    <label for="{{ form.service.id_for_label }}">Service Name:</label>
-                    {{ form.service }}
+                    <label for="{{ form.service.id_for_label }}" class="form-label">Service Name:</label>
+                    {{ form.service|add_class:"form-select" }}
                 </div>
                 
-                <!-- Location Selection -->
-                <div class="form-group col-md-6 mb-3">
-                    <div>
-                        <label for="street_address">Street Address:</label>
-                        <input type="text" name="street_address" id="street_address" value="{{ form.street_address.value }}">
-                    </div>
-                    <div>
-                        <label for="city">City:</label>
-                        <input type="text" name="city" id="city" value="{{ form.city.value }}">
-                    </div>
-                    <div>
-                        <label for="state">State:</label>
-                        <input type="text" name="state" id="state" value="{{ form.state.value }}">
-                    </div>
-                    <div>
-                        <label for="postal_code">Postal Code:</label>
-                        <input type="text" name="postal_code" id="postal_code" value="{{ form.postal_code.value }}">
-                    </div>
-                    <div>
-                        <label for="country">Country:</label>
-                        <input type="text" name="country" id="country" value="{{ form.country.value }}">
-                    </div>
+                <!-- Location Inputs -->
+                <div class="mb-3">
+                    <label for="street_address" class="form-label">Street Address:</label>
+                    <input type="text" class="form-control" name="street_address" id="street_address" value="{{ form.street_address.value }}">
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">City:</label>
+                    <input type="text" class="form-control" name="city" id="city" value="{{ form.city.value }}">
+                </div>
+                <div class="mb-3">
+                    <label for="state" class="form-label">State:</label>
+                    <input type="text" class="form-control" name="state" id="state" value="{{ form.state.value }}">
+                </div>
+                <div class="mb-3">
+                    <label for="postal_code" class="form-label">Postal Code:</label>
+                    <input type="text" class="form-control" name="postal_code" id="postal_code" value="{{ form.postal_code.value }}">
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label">Country:</label>
+                    <input type="text" class="form-control" name="country" id="country" value="{{ form.country.value }}">
                 </div>
                 
                 <!-- Price Range Input -->
-                <div class="form-group col-md-6 mb-3">
+                <div class="mb-3">
                     {{ form.price_range.errors }}
-                    <label for="{{ form.price_range.id_for_label }}">Price Range:</label>
-                    {{ form.price_range }}
+                    <label for="{{ form.price_range.id_for_label }}" class="form-label">Price Range:</label>
+                    {{ form.price_range|add_class:"form-control" }}
                 </div>
                 
                 <!-- Expiration Date Input -->
-                <div class="form-group col-md-6 mb-3">
+                <div class="mb-3">
                     {{ form.expiration_date.errors }}
-                    <label for="{{ form.expiration_date.id_for_label }}">Expiration Date:</label>
-                    {{ form.expiration_date }}
+                    <label for="{{ form.expiration_date.id_for_label }}" class="form-label">Expiration Date:</label>
+                    {{ form.expiration_date|add_class:"form-control" }}
                 </div>
                 
-                <!-- Skills Input -->
-                
-
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">Submit Post</button>
             </form>
@@ -77,4 +72,3 @@
     </div>
 </div>
 {% endblock %}
-
