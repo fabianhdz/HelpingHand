@@ -20,10 +20,11 @@ class ProfileForm(forms.ModelForm):
 
     skills = forms.CharField(required=True, help_text="Enter skills separated by commas.")
     languages = forms.CharField(required=True, help_text="Enter languages separated by commas.")
+
     class Meta:
         model = Profile
         fields = ['phone']
-    
+
     def clean_languages(self):
         languages_str = self.cleaned_data.get('languages', '')
         # Split the languages string by commas and strip spaces from each skill
@@ -105,7 +106,8 @@ class PostFilterForm(forms.Form):
         if self.cleaned_data['country']:
             queryset = queryset.filter(location__country__icontains=self.cleaned_data['country'])
         return queryset
-    
+
+
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
