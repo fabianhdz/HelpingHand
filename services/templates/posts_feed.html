@@ -47,7 +47,7 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{ post.role.name }}</h6>
                 <p class="card-text"> Description: {{ post.description }}</p>
                 <p class="card-text"><small class="text-muted">{{ post.location.city }}, {{ post.location.state }}, {{ post.location.postal_code }}, {{ post.location.country }}</small></p>
-                <a href="#" class="card-link">More details</a>
+                <a href="{% url 'post_detail' post.id %}" class="card-link">More details</a>
             </div>
         </div>
         {% empty %}
