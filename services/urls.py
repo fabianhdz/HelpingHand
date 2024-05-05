@@ -17,4 +17,5 @@ urlpatterns = [
          views.appointment_confirmation, name='appointment_confirmation'),
     path('my_posts/', views.my_posts, name='my_posts'),
     path('my_appointments/', views.my_appointments, name='my_appointments'),
+    path('profile/', views.view_profile, name='profile'),
 ]
