@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Location, Post, Role, Service
+from .models import Profile, Location, Post, Role, Service, Rating
 
 
 class UserForm(UserCreationForm):
@@ -105,3 +105,11 @@ class PostFilterForm(forms.Form):
         if self.cleaned_data['country']:
             queryset = queryset.filter(location__country__icontains=self.cleaned_data['country'])
         return queryset
+    
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['score']
+        widgets = {
+            'score': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5}),
+        }
