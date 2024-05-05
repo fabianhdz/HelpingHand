@@ -151,7 +151,7 @@ def create_post(request):
 @login_required
 def posts_feed(request):
     form = PostFilterForm(request.GET)
-    #active_appointments = Appointment.objects.exclude(status='completed').values('post')
+    # active_appointments = Appointment.objects.exclude(status='completed').values('post')
     posts = Post.objects.filter(is_active=True,).exclude(user=request.user)  # Only fetch active posts
 
     if form.is_valid():
@@ -220,7 +220,6 @@ def my_appointments(request):
             return redirect('complete_appointment', appointment_id=appointment_id)
 
     return render(request, 'my_appointments.html', {'appointments': appointments})
-
 
 
 @login_required
