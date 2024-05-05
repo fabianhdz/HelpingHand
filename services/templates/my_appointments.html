@@ -7,9 +7,14 @@
     {% for appointment in appointments %}
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">{{ appointment.post.title }}</h5>
-            <p class="card-text">{{ appointment.post.description }}</p>
-            <p><strong>Date:</strong> {{ appointment.post.date|date:"D, d M Y H:i" }}</p>
+            <h5 class="card-title">{{ appointment.post.service.name }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ appointment.post.description }}</p>
+            <p><strong>Role:</strong> {{ appointment.post.role}}</p>
+            <p><strong>Full Name:</strong> {{ appointment.post.user.first_name}} {{ appointment.post.user.last_name}}</p>
+            <p><strong>Phone:</strong> {{ appointment.post.user.profile.phone}}</p>
+            <p><strong>Email:</strong> {{ appointment.post.user.email}}</p>
+            <p><strong>Location:</strong> {{ appointment.post.location}}</p>
+            <p><strong>Expiration Date:</strong> {{ appointment.post.expiration_date|date:"D, d M Y" }}</p>
             <!-- Cancel Button -->
             <form method="post" action="{% url 'my_appointments' %}">
                 {% csrf_token %}
