@@ -151,7 +151,8 @@ def create_post(request):
 @login_required
 def posts_feed(request):
     form = PostFilterForm(request.GET)
-    posts = Post.objects.filter(is_active=True).exclude(user=request.user)  # Only fetch active posts
+    #active_appointments = Appointment.objects.exclude(status='completed').values('post')
+    posts = Post.objects.filter(is_active=True,).exclude(user=request.user)  # Only fetch active posts
 
     if form.is_valid():
         posts = form.filter_query(posts)
@@ -202,21 +203,24 @@ def my_posts(request):
 
 @login_required
 def my_appointments(request):
+    # Filter out completed appointments
+    appointments = Appointment.objects.filter(user=request.user, status='active')
     if request.method == 'POST':
-        action = request.POST.get('action')
-        if action.startswith('cancel_'):
+        action = request.POST.get('action', '')
+        if 'cancel' in action:
             appointment_id = action.split('_')[1]
             appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+            appointment.status = 'cancelled'  # Update status instead of deleting
             appointment.post.is_active = True
             appointment.post.save()
-            appointment.delete()
+            appointment.save()
             return redirect('posts_feed')
-        elif action.startswith('complete_'):
+        elif 'complete' in action:
             appointment_id = action.split('_')[1]
             return redirect('complete_appointment', appointment_id=appointment_id)
 
-    appointments = Appointment.objects.filter(user=request.user)
     return render(request, 'my_appointments.html', {'appointments': appointments})
+
 
 
 @login_required
