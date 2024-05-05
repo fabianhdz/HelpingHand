@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Rate User: {{ appointment.post.user.username }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="{{ form.score.id_for_label }}">Rating Score: </label>
+            {{ form.score.errors }}
+            {{ form.score }}
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Submit Rating</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

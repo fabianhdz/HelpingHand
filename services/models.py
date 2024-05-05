@@ -45,16 +45,26 @@ class TrustFactor(models.Model):
 
 
 class Rating(models.Model):
-    average = models.FloatField()
-    total = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.FloatField()  # Individual score for each rating
+    appointment = models.ForeignKey('Appointment', on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_ratings')
+
+    def __str__(self):
+        return f"{self.score} by {self.appointment.user.username} for {self.user.username}"
 
 
 class Appointment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
     confirmation_number = models.CharField(max_length=36, default=uuid.uuid4, editable=False)
-
+     # Status field to track the appointment's state
+    STATUS_CHOICES = (
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
+    
     def __str__(self):
         return f"Appointment #{self.confirmation_number} for {self.post}"
 
