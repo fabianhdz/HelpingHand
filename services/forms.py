@@ -19,10 +19,16 @@ class ProfileForm(forms.ModelForm):
     country = forms.CharField(max_length=100, required=True)
 
     skills = forms.CharField(required=True, help_text="Enter skills separated by commas.")
-
+    languages = forms.CharField(required=True, help_text="Enter languages separated by commas.")
     class Meta:
         model = Profile
-        fields = ['phone', 'language']
+        fields = ['phone']
+    
+    def clean_languages(self):
+        languages_str = self.cleaned_data.get('languages', '')
+        # Split the languages string by commas and strip spaces from each skill
+        language_names = [language.strip() for language in languages_str.split(',') if language.strip()]
+        return language_names
 
     def clean_skills(self):
         skills_str = self.cleaned_data.get('skills', '')
