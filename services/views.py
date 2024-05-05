@@ -3,10 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserForm, PostForm, ProfileForm, PostFilterForm
 from django.contrib.auth.decorators import login_required
-from .models import Service, Location, Role, Skill, Post
+from .models import Service, Location, Role, Skill, Post, Appointment
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseForbidden
 
 
 def home(request):
@@ -140,15 +142,65 @@ def create_post(request):
 
     return render(request, 'create_post.html', {'form': form})
 
-
+@login_required
 def posts_feed(request):
     form = PostFilterForm(request.GET)
-    posts = Post.objects.all()
+    posts = Post.objects.filter(is_active=True).exclude(user=request.user)  # Only fetch active posts
 
     if form.is_valid():
         posts = form.filter_query(posts)
-
+    posts = posts.filter(is_active=True)
     return render(request, 'posts_feed.html', {
         'form': form,
         'posts': posts
     })
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'post_detail.html', {'post': post})
+
+
+@login_required
+def make_appointment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.user:
+        return HttpResponseForbidden("You cannot make an appointment for your own post.")
+    if post.is_active:
+        appointment = Appointment.objects.create(user=request.user, post=post)
+        post.is_active = False
+        post.save()
+        return redirect('appointment_confirmation', appointment_id=appointment.id)
+    else:
+        return redirect('post_detail', post_id=post_id) 
+
+
+@login_required
+def appointment_confirmation(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    post_user = appointment.post.user
+    profile = getattr(post_user, 'profile', None)  # Safely get profile if exists
+    return render(request, 'appointment_confirmation.html', {
+        'appointment': appointment,
+        'profile': profile
+    })
+
+
+@login_required
+def my_posts(request):
+    # Assuming each post has a 'user' ForeignKey to User
+    posts = Post.objects.filter(user=request.user)
+    return render(request, 'my_posts.html', {'posts': posts})
+
+@login_required
+def my_appointments(request):
+    if request.method == 'POST' and 'cancel_appointment' in request.POST:
+        appointment_id = request.POST.get('cancel_appointment')
+        appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+        appointment.post.is_active = True  # Make the post active again
+        appointment.post.save()
+        appointment.delete()
+        return redirect('posts_feed')
+    
+    appointments = Appointment.objects.filter(user=request.user)
+    return render(request, 'my_appointments.html', {'appointments': appointments})
