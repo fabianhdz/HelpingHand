@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserForm, PostForm, ProfileForm, PostFilterForm
 from django.contrib.auth.decorators import login_required
-from .models import Service, Location, Role, Skill, Post, Appointment
+from .models import Service, Location, Role, Skill, Post, Appointment, Profile, Language
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -72,6 +72,7 @@ def signup_profile(request):
                 user.set_password(user_data['password1'])  # Set and hash the password
                 user.save()  # Save the user to the database
                 skill_names = profile_form.cleaned_data['skills']
+                language_names = profile_form.cleaned_data['languages']
                 # Create and save the profile linked to the user
                 profile = profile_form.save(commit=False)
                 profile.user = user
@@ -80,6 +81,11 @@ def signup_profile(request):
                     skill, _ = Skill.objects.get_or_create(name=skill_name.capitalize())
                     profile.skills.add(skill)
                     user.skills.add(skill)
+                profile_form.save_m2m()
+                for language_name in language_names:
+                    language, _ = Language.objects.get_or_create(name=language_name.capitalize())
+                    profile.languages.add(language)
+                    user.languages.add(language)
                 profile_form.save_m2m()  # Save many-to-many relationships if applicable
 
                 # Optionally log in the new user
@@ -206,3 +212,17 @@ def my_appointments(request):
 
     appointments = Appointment.objects.filter(user=request.user)
     return render(request, 'my_appointments.html', {'appointments': appointments})
+
+
+@login_required
+def view_profile(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)  # Get the profile associated with the user
+    languages = profile.languages.all()
+    skills = profile.skills.all()  # Get skills from the Profile's many-to-many relationship
+    return render(request, 'profile.html', {
+        'user': user,
+        'profile': profile,
+        'skills': skills,
+        'languages': languages,
+    })

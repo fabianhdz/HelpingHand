@@ -4,10 +4,13 @@ import uuid
 
 
 class Language(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=20)
     users = models.ManyToManyField(User, related_name='languages')
 
-
+    def __str__(self):
+        return self.name
+    
+    
 class Skill(models.Model):
     name = models.CharField(max_length=15)
     users = models.ManyToManyField(User, related_name='skills')
@@ -83,6 +86,6 @@ class Post(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone = models.BigIntegerField()
-    language = models.CharField(max_length=15)
+    languages = models.ManyToManyField(Language, related_name='profiles')
     location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='profile')
     skills = models.ManyToManyField(Skill, related_name='profiles')  # associate skills with profiles
