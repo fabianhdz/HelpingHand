@@ -9,8 +9,8 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
-    
-    
+
+
 class Skill(models.Model):
     name = models.CharField(max_length=15)
     users = models.ManyToManyField(User, related_name='skills')
@@ -57,14 +57,14 @@ class Appointment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
     confirmation_number = models.CharField(max_length=36, default=uuid.uuid4, editable=False)
-     # Status field to track the appointment's state
+    # Status field to track the appointment's state
     STATUS_CHOICES = (
         ('active', 'Active'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-    
+
     def __str__(self):
         return f"Appointment #{self.confirmation_number} for {self.post}"
 
