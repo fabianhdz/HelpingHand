@@ -9,9 +9,9 @@
             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.description }}</p>
-                        <p class="card-text"><small class="text-muted">Status: {% if post.is_active %}Active{% else %}Inactive{% endif %}</small></p>
+                        <h5 class="card-title">{{ post.service }}</h5>
+                        <p class="card-text"><strong>Description: </strong>{{ post.description }}</p>
+                        <p class="card-text"><small class="text-muted">Status: {% if post.is_active %}Active{% else %}Taken{% endif %}</small></p>
                         <!-- Example actions -->
                         <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">View Details</a>
                         
