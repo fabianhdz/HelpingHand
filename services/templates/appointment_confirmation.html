@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Appointment Confirmed</h1>
+    <p><strong>Appointment Confirmation Number:</strong> {{ appointment.confirmation_number }}.</p>
+    <p><strong>Details for the service:</strong> {{ appointment.post.description }}</p>
+    <p><strong>Date:</strong> {{ appointment.post.date|date:"D, d M Y H:i" }}</p>
+    
+    <!-- Display user contact information -->
+    <p>Contact Information for <strong>{{ appointment.post.user.username }}:</strong></p>
+    <p><strong>Email:</strong> {{ appointment.post.user.email }}</p>
+    {% if profile %}
+        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+    {% else %}
+        <p>Phone: Not available</p>
+    {% endif %}
+</div>
+{% endblock %}
