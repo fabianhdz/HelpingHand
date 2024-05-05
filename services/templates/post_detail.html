@@ -8,12 +8,12 @@
         <div class="card-body">
             <h5 class="card-title">Service Details</h5>
             <p><strong>Description:</strong> {{ post.description }}</p>
-            <p><strong>Price Range:</strong> {{ post.price_range }}</p>
+            <p><strong>Pay per hour:</strong> {{ post.price_range }}</p>
             <p><strong>Posted by:</strong>  {{ post.user.username }}</p>
             <p><strong>Full name:</strong>  {{ post.user.first_name}} {{post.user.last_name }}</p>
             <p><strong>Location:</strong> {{ post.location }}</p>
-            <p><strong>Date:</strong> {{ post.date|date:"D, d M Y H:i" }}</p>
-            <p><strong>Expires:</strong> {{ post.expiration_date|date:"D, d M Y H:i" }}</p>
+            <p><strong>Published:</strong> {{ post.date|date:"D, d M Y" }}</p>
+            <p><strong>Expires:</strong> {{ post.expiration_date|date:"D, d M Y" }}</p>
             <p><strong>Role:</strong> {{ post.role }}</p>
             {% if request.user != post.user %}
             <a href="{% url 'make_appointment' post.id %}" class="btn btn-primary">Make Appointment</a>
