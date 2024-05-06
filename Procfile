@@ -1,3 +1,3 @@
-web: gunicorn project.wsgi --log-file -
+web: gunicorn helpinghand.wsgi.application --log-file -
 release: bash release.sh
 
