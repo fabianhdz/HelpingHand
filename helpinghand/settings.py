@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-l&qs!=s)*dp_3t@_2)c7539fo8#pi3w1eke)+r(%on0feo#4-o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['helpinghand.applikuapp.com']
 
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'helpinghand.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL= 'mysql://cszzblugfdbjxaas:fpretghtelamkjte@18.236.163.96:8001/turdctlkkqenozfy'
 
 # Use dj-database-url to parse the DATABASE_URL
 DATABASES = {
@@ -120,7 +120,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
