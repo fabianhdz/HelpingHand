@@ -1,2 +1,3 @@
-web: sh run.sh
+web: gunicorn project.wsgi --log-file -
+release: bash release.sh
 
