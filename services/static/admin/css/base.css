@@ -96,8 +96,7 @@ body {
     font-size: 0.875rem;
     font-family: var(--font-family-primary);
     color: var(--body-fg);
-   /* background: var(--body-bg);*/
-    background-color: powderblue;
+    background: var(--body-bg);
 }
 
 /* LINKS */
