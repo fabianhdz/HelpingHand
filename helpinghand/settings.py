@@ -11,25 +11,32 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
 import os
-import dj_database_url
+from django.urls import reverse_lazy
 
 
-
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# SECURITY WARNING: keep the secret key used in production secret!
+
+SECRET_KEY = env("SECRET_KEY", default="django-insecure-l&qs!=s)*dp_3t@_2)c7539fo8#pi3w1eke)+r(%on0feo#4-o")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l&qs!=s)*dp_3t@_2)c7539fo8#pi3w1eke)+r(%on0feo#4-o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env("DEBUG", default=False)
 
-ALLOWED_HOSTS = ['helpinghand.applikuapp.com']
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 
 # Application definition
@@ -78,11 +85,31 @@ WSGI_APPLICATION = 'helpinghand.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-DATABASE_URL= 'mysql://cszzblugfdbjxaas:fpretghtelamkjte@18.236.163.96:8001/turdctlkkqenozfy'
 
-# Use dj-database-url to parse the DATABASE_URL
 DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL)
+    # read os.environ['DATABASE_URL'] and raises
+    # ImproperlyConfigured exception if not found
+    #
+    # The db() method is an alias for db_url().
+    "default": env.db(default="sqlite:///db.sqlite3"),
+}
+
+if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    DATABASES["default"]["ATOMIC_REQUESTS"] = True
+    DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)
+    CI_COLLATION = "und-x-icu"
+elif DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
+    CI_COLLATION = "NOCASE"
+elif DATABASES["default"]["ENGINE"] == "django.db.backends.mysql":
+    CI_COLLATION = "utf8mb4_unicode_ci"
+else:
+    raise NotImplementedError("Unknown database engine")
+CACHES = {
+    # Read os.environ['CACHE_URL'] and raises
+    # ImproperlyConfigured exception if not found.
+    #
+    # The cache() method is an alias for cache_url().
+    "default": env.cache(default="dummycache://"),
 }
 
 
@@ -104,6 +131,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {"": {"handlers": ["console"], "level": "DEBUG"}},
+}
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -120,8 +155,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'services/static')
+STATIC_URL = env.str("STATIC_URL", default="/static/")
+STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
