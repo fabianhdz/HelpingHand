@@ -6,27 +6,20 @@
     <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Phone:</strong> {{ profile.phone }}</p>
-    <strong>Languages: </strong>
-    <p><ul>
-        {% for language in languages %}
-            <li>{{ language.name }}</li>
-        {% empty %}
-            <li>No languages listed.</li>
-        {% endfor %}
-        </ul>
-    </p>
-    <p><strong>Location:</strong> {{ profile.location }}</p>
+    <p><strong>Languages: </strong></p>
     
-    <p>
-    <strong>Skills: </strong>
-        <ul>
-        {% for skill in skills %}
-            <li>{{ skill.name }}</li>
+        {% for language in languages %}
+            <p>{{ language.name }}</p>
         {% empty %}
-            <li>No skills listed.</li>
+           <p>No languages listed.</p>
         {% endfor %}
-        </ul>
-    </p>
-
+    
+    <p><strong>Location:</strong> {{ profile.location }}</p>
+    <p><strong>Skills: </strong></p>
+        {% for skill in skills %}
+            <p>{{ skill.name }}</p>
+        {% empty %}
+            <p>No skills listed.</p>
+        {% endfor %}
 </div>
 {% endblock %}

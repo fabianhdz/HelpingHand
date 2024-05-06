@@ -7,7 +7,7 @@
     {% for appointment in appointments %}
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">{{ appointment.post.service.name }}</h5>
+            <h3 class="card-title">{{ appointment.post.service.name }}</h3>
             <p class="card-text"><strong>Description:</strong> {{ appointment.post.description }}</p>
             <p><strong>Role:</strong> {{ appointment.post.role}}</p>
             <p><strong>Full Name:</strong> {{ appointment.post.user.first_name}} {{ appointment.post.user.last_name}}</p>
@@ -18,9 +18,9 @@
             <!-- Cancel Button -->
             <form method="post" action="{% url 'my_appointments' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger" name="action" value="cancel_{{ appointment.id }}">Cancel Appointment</button>
+                <p><button type="submit" class="btn btn-danger" name="action" value="cancel_{{ appointment.id }}">Cancel Appointment</button></p>
                 <!-- Complete Button -->
-                <button type="submit" class="btn btn-success" name="action" value="complete_{{ appointment.id }}">Mark as Completed</button>
+                <p><button type="submit" class="btn btn-success" name="action" value="complete_{{ appointment.id }}">Mark as Completed</button></p>
             </form>
         </div>
     </div>
