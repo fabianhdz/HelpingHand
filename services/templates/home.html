@@ -7,19 +7,50 @@
 {% if user.is_authenticated %}
 
 
+<h1>Welcome!</h1>
+<p>Below you can choose to create a Provider/Client post OR you can browse the current posts.</p>
+<p>Feel free to press the buttons below or the corresponding image.</p>
 
-    <div class="hero-unit mb-3">
-        <a href="{% url 'create_post' %}" class="btn btn-primary btn-large">Create Post</a> 
+
+<div class="hero-unit mb-3" style="display: flex; flex-direction: row; justify-content: center; align-items: flex-start;">
+  <div style="text-align: center; margin-right: 10%">
+    <a href="{% url 'create_post' %}" class="image-button">
+      <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Left Image">
+    </a>
+  </div>
+  <div style="text-align: center; margin-left: 10%">
+    <a href="{% url 'posts_feed' %}" class="image-button">
+      <img src="https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Right Image">
+    </a>
+  </div>
+</div>
+<div style="display: flex; justify-content: center;">
+  <a href="{% url 'create_post' %}" class="btn btn-primary btn-large" style="margin-right: 25%;">Create Post</a>
+  <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large" style="margin-left: 35%;">Go to Post Feed</a>
+</div>
+
+<!--
+    <div class="hero-unit mb-3" >
+      <div style="text-align: center;">
+        <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 1">
+        <br>
+        <a href="{% url 'create_post' %}" class="btn btn-primary btn-large" style="margin-right: 60%;">Create Post</a> 
+      </div>
+      <div style="text-align: center;">
+        <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 1">
+        <br>
+        <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large" >Go to Post Feed</a> 
+      </div>
     </div>
-    
-    <div class="hero-unit mb-3">
+    <--------
+    <div class="hero-unit mb-3"style="float: right;">
       <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large">Go to Post Feed</a> 
   </div>
-
+-->
 
 {% else %}
 
-<h1>Welcome: Login Below</h1>
+<h1>Home Page</h1>
 <br/>
 <br/>
 
