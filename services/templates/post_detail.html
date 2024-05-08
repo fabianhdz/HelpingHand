@@ -1,26 +1,20 @@
-<!-- post_detail.html -->
 {% extends 'base.html' %}
-
+{% block title %}{{ post.service.name }} · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <p><h2>{{ post.service.name }}</h2></p>
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">Service Details</h3>
-            <p><strong>Description:</strong> {{ post.description }}</p>
-            <p><strong>Pay per hour:</strong> {{ post.price_range }}</p>
-            <p><strong>Posted by:</strong>  {{ post.user.username }}</p>
-            <p><strong>Full name:</strong>  {{ post.user.first_name}} {{post.user.last_name }}</p>
-            <p><strong>Location:</strong> {{ post.location }}</p>
-            <p><strong>Published:</strong> {{ post.date|date:"D, d M Y" }}</p>
-            <p><strong>Expires:</strong> {{ post.expiration_date|date:"D, d M Y" }}</p>
-            <p><strong>Role:</strong> {{ post.role }}</p>
-            {% if request.user != post.user %}
-            <p><a href="{% url 'make_appointment' post.id %}" class="btn btn-primary">Make Appointment</a></p>
-            {% else %}
-            <p class="text-muted">You cannot make an appointment for your own post.</p>
-            {% endif %}
-        </div>
-    </div>
+<a class="back-link" href="{% url 'posts_feed' %}">{% include 'components/icon.html' with name='back' %}Explore services</a>
+<header class="page-heading detail-heading"><div><span class="badge {% if post.role.name|lower == 'client' %}badge-secondary{% endif %}">{% if post.role.name|lower == 'provider' %}Offering help{% elif post.role.name|lower == 'client' %}Looking for help{% else %}{{ post.role.name }}{% endif %}</span><h1>{{ post.service.name }}</h1><p class="inline-meta">{% include 'components/icon.html' with name='pin' %}{{ post.location.city }}, {{ post.location.state }}, {{ post.location.country }}</p></div></header>
+<div class="detail-layout">
+  <div class="detail-main">
+    <section class="content-panel"><h2>About this service</h2><div class="prose">{{ post.description|linebreaks }}</div><dl class="detail-meta"><div><dt>Published</dt><dd>{{ post.date|date:"D, d M Y" }}</dd></div><div><dt>Expires</dt><dd>{{ post.expiration_date|date:"D, d M Y" }}</dd></div><div><dt>Role</dt><dd>{{ post.role }}</dd></div><div><dt>Status</dt><dd><span class="badge {% if not post.is_active %}badge-neutral{% endif %}">{% if post.is_active %}Available{% else %}Taken{% endif %}</span></dd></div></dl></section>
+    <section class="content-panel"><h2>{% include 'components/icon.html' with name='pin' %}Location</h2><p class="muted">{{ post.location }}</p></section>
+  </div>
+  <aside class="booking-panel">
+    <div class="booking-price">{{ post.price_range|floatformat:2 }}<span>per hour</span></div>
+    <div class="person-row"><span class="avatar">{{ post.user.username|first|upper }}</span><div><strong>{{ post.user.get_full_name|default:post.user.username }}</strong><span>@{{ post.user.username }}</span></div></div>
+    {% if request.user != post.user %}
+      {% if post.is_active %}<a class="button button-full" href="{% url 'make_appointment' post.id %}">Make appointment {% include 'components/icon.html' with name='arrow' %}</a><p class="booking-note">{% include 'components/icon.html' with name='calendar' %}Contact details are shared after booking.</p>
+      {% else %}<div class="notice">{% include 'components/icon.html' with name='info' %}<span>This post has already been taken.</span></div>{% endif %}
+    {% else %}<p class="booking-note">This is your post. You cannot make an appointment for your own post.</p><a class="button button-outline button-full" href="{% url 'my_posts' %}">View my posts</a>{% endif %}
+  </aside>
 </div>
 {% endblock %}

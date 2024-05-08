@@ -1,31 +1,27 @@
-<!-- my_appointments.html -->
 {% extends 'base.html' %}
-
+{% block title %}My appointments · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h2>My Appointments</h2>
-    {% for appointment in appointments %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h3 class="card-title">{{ appointment.post.service.name }}</h3>
-            <p class="card-text"><strong>Description:</strong> {{ appointment.post.description }}</p>
-            <p><strong>Role:</strong> {{ appointment.post.role}}</p>
-            <p><strong>Full Name:</strong> {{ appointment.post.user.first_name}} {{ appointment.post.user.last_name}}</p>
-            <p><strong>Phone:</strong> {{ appointment.post.user.profile.phone}}</p>
-            <p><strong>Email:</strong> {{ appointment.post.user.email}}</p>
-            <p><strong>Location:</strong> {{ appointment.post.location}}</p>
-            <p><strong>Expiration Date:</strong> {{ appointment.post.expiration_date|date:"D, d M Y" }}</p>
-            <!-- Cancel Button -->
-            <form method="post" action="{% url 'my_appointments' %}">
-                {% csrf_token %}
-                <p><button type="submit" class="btn btn-danger" name="action" value="cancel_{{ appointment.id }}">Cancel Appointment</button></p>
-                <!-- Complete Button -->
-                <p><button type="submit" class="btn btn-success" name="action" value="complete_{{ appointment.id }}">Mark as Completed</button></p>
-            </form>
-        </div>
-    </div>
-    {% empty %}
-    <p>No appointments found.</p>
-    {% endfor %}
+<header class="page-heading"><div><h1>My appointments</h1></div><a class="button button-outline" href="{% url 'posts_feed' %}">Explore services {% include 'components/icon.html' with name='arrow' %}</a></header>
+<div class="results-heading"><h2>{{ appointments|length }} active appointment{{ appointments|length|pluralize }}</h2></div>
+<div class="appointment-list">
+  {% for appointment in appointments %}
+    <article class="appointment-card">
+      <div class="appointment-top"><div class="appointment-title"><span class="icon-tile">{% include 'components/icon.html' with name='calendar' %}</span><div><h2><a href="{% url 'post_detail' appointment.post.id %}">{{ appointment.post.service.name }}</a></h2><p>{{ appointment.post.role }} · Expires {{ appointment.post.expiration_date|date:"d M Y" }}</p></div></div><span class="badge"><span class="status-dot"></span>Active</span></div>
+      <p class="prose">{{ appointment.post.description }}</p>
+      <dl class="contact-grid">
+        <div><dt>{% include 'components/icon.html' with name='people' %}Your connection</dt><dd>{{ appointment.post.user.get_full_name|default:appointment.post.user.username }}</dd></div>
+        <div><dt>{% include 'components/icon.html' with name='phone' %}Phone</dt><dd>{{ appointment.post.user.profile.phone|default:"Not available" }}</dd></div>
+        <div><dt>{% include 'components/icon.html' with name='mail' %}Email</dt><dd>{{ appointment.post.user.email|default:"Not available" }}</dd></div>
+        <div><dt>{% include 'components/icon.html' with name='pin' %}Location</dt><dd>{{ appointment.post.location }}</dd></div>
+      </dl>
+      <form method="post" action="{% url 'my_appointments' %}" class="appointment-actions">
+        {% csrf_token %}
+        <button type="submit" class="button button-danger" name="action" value="cancel_{{ appointment.id }}">Cancel appointment</button>
+        <button type="submit" class="button button-confirm" name="action" value="complete_{{ appointment.id }}">{% include 'components/icon.html' with name='check' %}Mark as completed</button>
+      </form>
+    </article>
+  {% empty %}
+    <div class="empty-state"><span class="icon-tile">{% include 'components/icon.html' with name='calendar' %}</span><h2>No active appointments</h2><p>Browse services to book an appointment.</p><a class="button" href="{% url 'posts_feed' %}">Explore services {% include 'components/icon.html' with name='arrow' %}</a></div>
+  {% endfor %}
 </div>
 {% endblock %}

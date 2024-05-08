@@ -1,0 +1,25 @@
+{% load widget_tweaks %}
+<div class="field {% if wide %}field-wide{% endif %}{% if field.errors %} has-errors{% endif %}">
+  <label for="{{ field.id_for_label }}">{{ label|default:field.label }}{% if not field.field.required and not force_required %} <span class="optional">(optional)</span>{% endif %}</label>
+  {% if force_required %}
+    {% if field.errors %}
+      {% with describedby=field.auto_id|add:'_errors' %}
+        {% render_field field class="form-control" required="required" aria-invalid="true" aria-describedby=describedby %}
+      {% endwith %}
+    {% else %}
+      {% render_field field class="form-control" required="required" %}
+    {% endif %}
+  {% elif field.errors %}
+    {% with describedby=field.auto_id|add:'_errors' %}
+      {% render_field field class="form-control" aria-invalid="true" aria-describedby=describedby %}
+    {% endwith %}
+  {% elif field.help_text %}
+    {% with describedby=field.auto_id|add:'_help' %}
+      {% render_field field class="form-control" aria-describedby=describedby %}
+    {% endwith %}
+  {% else %}
+    {% render_field field class="form-control" %}
+  {% endif %}
+  {% if field.help_text %}<div class="field-help" id="{{ field.auto_id }}_help">{{ field.help_text|safe }}</div>{% endif %}
+  {% if field.errors %}<div class="field-errors" id="{{ field.auto_id }}_errors">{{ field.errors }}</div>{% endif %}
+</div>

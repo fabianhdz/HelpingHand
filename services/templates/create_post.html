@@ -1,76 +1,29 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
+{% block title %}Create a post · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h2 class="mb-3 text-center">Create a Post</h2>
-            <form method="post" class="needs-validation" novalidate>
-                {% csrf_token %}
-                
-                <!-- Role Selection -->
-                <div class="mb-3">
-                    {{ form.role.errors }}
-                    <label for="{{ form.role.id_for_label }}" class="form-label">Role:</label>
-                    {{ form.role|add_class:"form-select" }}
-                </div>
-                
-                <!-- Description Field -->
-                <div class="mb-3">
-                    {{ form.description.errors }}
-                    <label for="{{ form.description.id_for_label }}" class="form-label">Description:</label>
-                    {{ form.description|add_class:"form-control" }}
-                </div>
-                
-                <!-- Service Name Input -->
-                <div class="mb-3">
-                    {{ form.service.errors }}
-                    <label for="{{ form.service.id_for_label }}" class="form-label">Service Name:</label>
-                    {{ form.service|add_class:"form-control" }}
-                </div>
-                
-                <!-- Location Inputs -->
-                <div class="mb-3">
-                    <label for="street_address" class="form-label">Street Address:</label>
-                    <input type="text" class="form-control" name="street_address" id="street_address" value="{{ form.street_address.value }}">
-                </div>
-                <div class="mb-3">
-                    <label for="city" class="form-label">City:</label>
-                    <input type="text" class="form-control" name="city" id="city" value="{{ form.city.value }}">
-                </div>
-                <div class="mb-3">
-                    <label for="state" class="form-label">State:</label>
-                    <input type="text" class="form-control" name="state" id="state" value="{{ form.state.value }}">
-                </div>
-                <div class="mb-3">
-                    <label for="postal_code" class="form-label">Postal Code:</label>
-                    <input type="text" class="form-control" name="postal_code" id="postal_code" value="{{ form.postal_code.value }}">
-                </div>
-                <div class="mb-3">
-                    <label for="country" class="form-label">Country:</label>
-                    <input type="text" class="form-control" name="country" id="country" value="{{ form.country.value }}">
-                </div>
-                
-                <!-- Price Range Input -->
-                <div class="mb-3">
-                    {{ form.price_range.errors }}
-                    <label for="{{ form.price_range.id_for_label }}" class="form-label">Pay Per Hour:</label>
-                    {{ form.price_range|add_class:"form-control" }}
-                </div>
-                
-                <!-- Expiration Date Input -->
-                <div class="mb-3">
-                    {{ form.expiration_date.errors }}
-                    <label for="{{ form.expiration_date.id_for_label }}" class="form-label">Expiration Date:</label>
-                    {{ form.expiration_date|add_class:"form-control" }}
-                </div>
-                
-                <!-- Submit Button -->
-                <div class ="mb-3">
-                    <button type="submit" class="btn btn-primary">Submit Post</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<a class="back-link" href="{% url 'my_posts' %}">{% include 'components/icon.html' with name='back' %}Back to my posts</a>
+<div class="form-page">
+  <header class="form-intro"><h1>Create a post</h1><p>Offer a service or ask for help.</p></header>
+  <section class="form-panel">
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <fieldset><legend><span>01</span>The essentials</legend><div class="form-grid">
+        {% include 'components/field.html' with field=form.role label='Your role' %}
+        {% include 'components/field.html' with field=form.service label='Service name' %}
+        {% include 'components/field.html' with field=form.description wide=True %}
+        {% include 'components/field.html' with field=form.price_range label='Pay per hour' %}
+        {% include 'components/field.html' with field=form.expiration_date %}
+      </div></fieldset>
+      <fieldset><legend><span>02</span>Where it happens</legend><div class="form-grid">
+        {% include 'components/field.html' with field=form.street_address wide=True %}
+        {% include 'components/field.html' with field=form.city %}
+        {% include 'components/field.html' with field=form.state %}
+        {% include 'components/field.html' with field=form.postal_code %}
+        {% include 'components/field.html' with field=form.country %}
+      </div></fieldset>
+      <div class="form-actions"><a class="text-link" href="{% url 'my_posts' %}">Cancel</a><button class="button" type="submit">Publish post {% include 'components/icon.html' with name='arrow' %}</button></div>
+    </form>
+  </section>
 </div>
 {% endblock %}

@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
-
+{% block title %}Rate your experience · Helping Hand{% endblock %}
 {% block content %}
-<div class="container">
-    <h2>Rate User: {{ appointment.post.user.username }}</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group mb-3">
-            <label for="{{ form.score.id_for_label }}">Rating Score: </label>
-            {{ form.score.errors }}
-            {{ form.score }}
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Submit Rating</button>
-        </div>
+<a class="back-link" href="{% url 'my_appointments' %}">{% include 'components/icon.html' with name='back' %}Back to appointments</a>
+<div class="rating-page">
+  <h1>Rate your experience</h1>
+  <section class="form-panel">
+    <div class="person-row"><span class="avatar">{{ appointment.post.user.username|first|upper }}</span><div><strong>{{ appointment.post.user.get_full_name|default:appointment.post.user.username }}</strong><span>{{ appointment.post.service.name }}</span></div></div>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% include 'components/field.html' with field=form.score label='Your rating (1–5)' %}
+      <p class="field-help">1 = Poor · 2 = Fair · 3 = Good · 4 = Great · 5 = Excellent</p>
+      <button type="submit" class="button button-full">Submit rating {% include 'components/icon.html' with name='check' %}</button>
     </form>
+  </section>
 </div>
 {% endblock %}

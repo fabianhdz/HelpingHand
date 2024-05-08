@@ -1,38 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">Helping Hand</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-              </li>
-              {% if user.is_authenticated %}
-              <li class="nav-item">
-                  <a class="nav-link" href="{% url 'my_posts' %}">My Posts</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{% url 'my_appointments' %}">My Appointments</a>
-              </li>
-              {% else %}
-              <li class="nav-item">
-                  <a class="nav-link" href="{% url 'home' %}">Login</a>
-              </li>
-              {% endif %}
-          </ul>
+<header class="site-header">
+  <nav class="nav-shell" aria-label="Main navigation">
+    <a class="brand" href="{% url 'home' %}" aria-label="Helping Hand home"><span class="brand-mark">{% include 'components/icon.html' with name='brand' %}</span>Helping Hand<span class="brand-dot">.</span></a>
+    <button class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" data-menu-toggle aria-label="Toggle navigation">{% include 'components/icon.html' with name='menu' %}</button>
+    <div class="navigation" id="main-navigation">
+      {% with current=request.resolver_match.url_name %}
+        <div class="nav-links">
+          <a class="nav-link {% if current == 'home' %}is-current{% endif %}" {% if current == 'home' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
           {% if user.is_authenticated %}
-          <!-- This nav is pushed to the right by ms-auto -->
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-            </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-              </li>
-          </ul>
+            <a class="nav-link {% if current == 'posts_feed' or current == 'post_detail' %}is-current{% endif %}" {% if current == 'posts_feed' %}aria-current="page"{% endif %} href="{% url 'posts_feed' %}">Explore services</a>
+            <a class="nav-link {% if current == 'my_posts' %}is-current{% endif %}" {% if current == 'my_posts' %}aria-current="page"{% endif %} href="{% url 'my_posts' %}">My posts</a>
+            <a class="nav-link {% if current == 'my_appointments' or current == 'appointment_confirmation' or current == 'complete_appointment' %}is-current{% endif %}" {% if current == 'my_appointments' %}aria-current="page"{% endif %} href="{% url 'my_appointments' %}">Appointments</a>
           {% endif %}
-      </div>
-  </div>
-</nav>
+        </div>
+        <div class="nav-actions">
+          {% if user.is_authenticated %}
+            <a class="profile-link {% if current == 'profile' %}is-current{% endif %}" href="{% url 'profile' %}" aria-label="Your profile"><span class="avatar avatar-small">{{ user.username|first|upper }}</span><span class="profile-link-label">My profile</span></a>
+            <a class="nav-link logout-link" href="{% url 'logout' %}">Log out</a>
+            <a class="button button-small" href="{% url 'create_post' %}">{% include 'components/icon.html' with name='plus' %}Create a post</a>
+          {% else %}
+            <a class="nav-link" href="{% url 'home' %}#login">Log in</a>
+            <a class="button button-small" href="{% url 'signup_user' %}">Sign up</a>
+          {% endif %}
+        </div>
+      {% endwith %}
+    </div>
+  </nav>
+</header>

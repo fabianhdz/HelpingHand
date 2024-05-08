@@ -1,25 +1,13 @@
 {% extends 'base.html' %}
-
+{% block title %}My profile · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h1>{{ user.username }}'s Profile</h1>
-    <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Phone:</strong> {{ profile.phone }}</p>
-    <p><strong>Languages: </strong></p>
-    
-        {% for language in languages %}
-            <p>{{ language.name }}</p>
-        {% empty %}
-           <p>No languages listed.</p>
-        {% endfor %}
-    
-    <p><strong>Location:</strong> {{ profile.location }}</p>
-    <p><strong>Skills: </strong></p>
-        {% for skill in skills %}
-            <p>{{ skill.name }}</p>
-        {% empty %}
-            <p>No skills listed.</p>
-        {% endfor %}
+<header class="page-heading"><div><h1>My profile</h1></div><a class="button button-outline" href="{% url 'my_posts' %}">View my posts {% include 'components/icon.html' with name='arrow' %}</a></header>
+<div class="profile-layout">
+  <aside class="profile-summary"><div class="profile-cover" aria-hidden="true"></div><span class="avatar avatar-large">{{ user.username|first|upper }}</span><h2>{{ user.get_full_name|default:user.username }}</h2><p>@{{ user.username }}</p><span class="badge">{% include 'components/icon.html' with name='people' %}Community member</span><p class="profile-location">{% include 'components/icon.html' with name='pin' %}{{ profile.location.city }}, {{ profile.location.state }}</p></aside>
+  <div class="profile-details">
+    <section class="content-panel"><h2>Your details</h2><dl class="contact-grid"><div><dt>Full name</dt><dd>{{ user.get_full_name|default:"Not provided" }}</dd></div><div><dt>Email</dt><dd>{{ user.email|default:"Not provided" }}</dd></div><div><dt>Phone</dt><dd>{{ profile.phone }}</dd></div><div><dt>Location</dt><dd>{{ profile.location }}</dd></div></dl></section>
+    <section class="content-panel"><h2>{% include 'components/icon.html' with name='spark' %}Skills</h2><div class="tag-list">{% for skill in skills %}<span class="tag">{{ skill.name }}</span>{% empty %}<p class="muted">No skills listed.</p>{% endfor %}</div></section>
+    <section class="content-panel"><h2>{% include 'components/icon.html' with name='people' %}Languages</h2><div class="tag-list">{% for language in languages %}<span class="tag tag-secondary">{{ language.name }}</span>{% empty %}<p class="muted">No languages listed.</p>{% endfor %}</div></section>
+  </div>
 </div>
 {% endblock %}

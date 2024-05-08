@@ -1,58 +1,29 @@
 {% extends 'base.html' %}
-
+{% block title %}Explore services · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Posts Feed</h2>
-    <form method="get" class="mb-4">
-        <div class="row">
-            <!-- Each form control has a label above and the control beneath, uniformly spaced -->
-            <div class="col-md-2 mb-4">
-                {{ form.role.label_tag }}<br>
-                {{ form.role }}
-            </div>
-            <div class="col-md-2 mb-4">
-                {{ form.service.label_tag }}<br>
-                {{ form.service }}
-            </div>
-            <div class="col-md-2 mb-4">
-                {{ form.city.label_tag }}<br>
-                {{ form.city }}
-            </div>
-            <div class="col-md-2 mb-4">
-                {{ form.state.label_tag }}<br>
-                {{ form.state }}
-            </div>
-            <div class="col-md-2 mb-4">
-                {{ form.postal_code.label_tag }}<br>
-                {{ form.postal_code }}
-            </div>
-            <div class="col-md-2 mb-4">
-                {{ form.country.label_tag }}<br>
-                {{ form.country }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{% url 'posts_feed' %}" class="btn btn-secondary ml-2">Clear Filter</a>
-            </div>
-        </div>
+<header class="page-heading"><div><h1>Explore services</h1><p>Find help near you.</p></div><a class="button button-outline" href="{% url 'create_post' %}">{% include 'components/icon.html' with name='plus' %}Create a post</a></header>
+<div class="feed-layout">
+  <aside class="filter-panel">
+    <div class="panel-title"><h2>{% include 'components/icon.html' with name='filter' %}Filters</h2></div>
+    <form method="get" action="{% url 'posts_feed' %}" class="stack-form">
+      {% include 'components/field.html' with field=form.role label='I’m looking for' %}
+      {% include 'components/field.html' with field=form.service %}
+      <div class="form-divider">LOCATION</div>
+      {% include 'components/field.html' with field=form.city %}
+      {% include 'components/field.html' with field=form.state %}
+      {% include 'components/field.html' with field=form.postal_code %}
+      {% include 'components/field.html' with field=form.country %}
+      <button type="submit" class="button button-full">{% include 'components/icon.html' with name='search' %}Apply filters</button>
+      <a class="clear-link" href="{% url 'posts_feed' %}">Clear all filters</a>
     </form>
-
-    <div id="postsContainer">
-        {% for post in posts %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ post.service.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ post.role.name }}</h6>
-                <h6 class="card-text"> Description: {{ post.description }}</h6>
-                <h6 class="card-text"><small class="text-muted">{{ post.location.city }}, {{ post.location.state }}, {{ post.location.postal_code }}, {{ post.location.country }}</small></h6>
-                <a href="{% url 'post_detail' post.id %}" class="card-link">More details</a>
-            </div>
-        </div>
-        {% empty %}
-        <p>No posts found.</p>
-        {% endfor %}
+  </aside>
+  <section class="feed-results" aria-labelledby="results-heading">
+    <div class="results-heading"><h2 id="results-heading">{{ posts|length }} available post{{ posts|length|pluralize }}</h2></div>
+    <div class="post-grid">
+      {% for post in posts %}{% include 'components/post_card.html' %}{% empty %}
+        <div class="empty-state"><span class="icon-tile">{% include 'components/icon.html' with name='search' %}</span><h2>No matches just yet.</h2><p>Try another location or clear your filters.</p><a class="button button-outline" href="{% url 'posts_feed' %}">Clear filters</a></div>
+      {% endfor %}
     </div>
+  </section>
 </div>
 {% endblock %}

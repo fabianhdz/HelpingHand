@@ -1,80 +1,44 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
-<div class="col-md-6 offset-md-3">
-
 {% if user.is_authenticated %}
-
-
-<h1>Welcome!</h1>
-<p>Below you can choose to create a Provider/Client post OR you can browse the current posts.</p>
-<p>Feel free to press the buttons below or the corresponding image.</p>
-
-
-<div class="hero-unit mb-3" style="display: flex; flex-direction: row; justify-content: center; align-items: flex-start;">
-  <div style="text-align: center; margin-right: 10%">
-    <a href="{% url 'create_post' %}" class="image-button">
-      <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Left Image">
+  <header class="home-heading">
+    <div class="welcome-row"><p class="muted">Welcome back, {{ user.first_name|default:user.username }}.</p></div>
+    <h1>Find help. Share your skills.</h1>
+    <p class="muted">Connect with people nearby.</p>
+  </header>
+  <div class="action-grid">
+    <a class="action-card" href="{% url 'posts_feed' %}">
+      <span class="icon-tile">{% include 'components/icon.html' with name='search' %}</span>
+      <div><h2>Explore services</h2><p>Find help nearby.</p></div>
+      {% include 'components/icon.html' with name='arrow' %}
+    </a>
+    <a class="action-card" href="{% url 'create_post' %}">
+      <span class="icon-tile">{% include 'components/icon.html' with name='plus' %}</span>
+      <div><h2>Create a post</h2><p>Offer a service or ask for help.</p></div>
+      {% include 'components/icon.html' with name='arrow' %}
+    </a>
+    <a class="action-card" href="{% url 'my_appointments' %}">
+      <span class="icon-tile">{% include 'components/icon.html' with name='calendar' %}</span>
+      <div><h2>Appointments</h2><p>Manage your bookings.</p></div>
+      {% include 'components/icon.html' with name='arrow' %}
     </a>
   </div>
-  <div style="text-align: center; margin-left: 10%">
-    <a href="{% url 'posts_feed' %}" class="image-button">
-      <img src="https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Right Image">
-    </a>
-  </div>
-</div>
-<div style="display: flex; justify-content: center;">
-  <a href="{% url 'create_post' %}" class="btn btn-primary btn-large" style="margin-right: 25%;">Create Post</a>
-  <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large" style="margin-left: 35%;">Go to Post Feed</a>
-</div>
-
-<!--
-    <div class="hero-unit mb-3" >
-      <div style="text-align: center;">
-        <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 1">
-        <br>
-        <a href="{% url 'create_post' %}" class="btn btn-primary btn-large" style="margin-right: 60%;">Create Post</a> 
-      </div>
-      <div style="text-align: center;">
-        <img src="https://images.pexels.com/photos/5691639/pexels-photo-5691639.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 1">
-        <br>
-        <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large" >Go to Post Feed</a> 
-      </div>
-    </div>
-    <--------
-    <div class="hero-unit mb-3"style="float: right;">
-      <a href="{% url 'posts_feed' %}" class="btn btn-primary btn-large">Go to Post Feed</a> 
-  </div>
--->
-
 {% else %}
-
-<h1>Home Page</h1>
-<br/>
-<br/>
-
-<form method="POST" action="{% url 'home' %}">
-    {% csrf_token %}
-    <form>
-        <div class="mb-3">
-          <input type="text" class="form-control" name="username", placeholder="Username" required>
-        </div>
-        <div class="mb-3">
-          <input type="password" class="form-control" name="password", placeholder="Password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+  <section class="home-hero home-hero-guest">
+    <div class="hero-copy">
+      <h1>Local help,<br> made simple.</h1>
+      <p class="hero-description">Find a service or share your skills.</p>
+    </div>
+    <div class="login-panel" id="login">
+      <h2>Log in</h2>
+      <form method="post" action="{% url 'home' %}" class="stack-form">
+        {% csrf_token %}
+        <div class="field"><label for="login-username">Username</label><input id="login-username" type="text" name="username" placeholder="Enter your username" autocomplete="username" required></div>
+        <div class="field"><label for="login-password">Password</label><input id="login-password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required></div>
+        <button type="submit" class="button button-full">Log in</button>
       </form>
-</form>
-
-
-<p class="mt-3">
-  Don't have an account? <a href="{% url 'signup_user' %}">Create Account</a>
-</p>
-
-
-</div>
-
+      <p class="form-footnote">New here? <a href="{% url 'signup_user' %}">Create an account</a></p>
+    </div>
+  </section>
 {% endif %}
-
 {% endblock %}

@@ -1,27 +1,11 @@
 {% extends 'base.html' %}
-
+{% block title %}My posts · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h2>My Posts</h2>
-    {% if posts %}
-        <div class="row">
-            {% for post in posts %}
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.service }}</h5>
-                        <p class="card-text"><strong>Description: </strong>{{ post.description }}</p>
-                        <p class="card-text"><small class="text-muted">Status: {% if post.is_active %}Active{% else %}Taken{% endif %}</small></p>
-                        <!-- Example actions -->
-                        <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">View Details</a>
-                        
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>You have no posts.</p>
-    {% endif %}
+<header class="page-heading"><div><h1>My posts</h1></div><a class="button" href="{% url 'create_post' %}">{% include 'components/icon.html' with name='plus' %}Create a post</a></header>
+<div class="results-heading"><h2>{{ posts|length }} post{{ posts|length|pluralize }}</h2></div>
+<div class="post-grid post-grid-three">
+  {% for post in posts %}{% include 'components/post_card.html' with own=True %}{% empty %}
+    <div class="empty-state"><span class="icon-tile">{% include 'components/icon.html' with name='spark' %}</span><h2>No posts yet</h2><p>Offer a service or ask for help.</p><a class="button" href="{% url 'create_post' %}">Create your first post {% include 'components/icon.html' with name='arrow' %}</a></div>
+  {% endfor %}
 </div>
 {% endblock %}

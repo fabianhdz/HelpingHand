@@ -1,21 +1,16 @@
 {% extends 'base.html' %}
-
+{% block title %}Appointment confirmed · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h1>Appointment Confirmed</h1>
-    <p><strong>Appointment Confirmation Number:</strong> {{ appointment.confirmation_number }}</p>
-    <p><strong>Role:</strong> {{ appointment.post.role }}</p>
-    <p><strong>Details for the service:</strong> {{ appointment.post.description }}</p>
-    <p><strong>Expiration Date:</strong> {{ appointment.post.expiration_date|date:"D, d M Y" }}</p>
-    <p><strong>Pay per Hour :</strong> {{ appointment.post.price_range }}</p>
-    <!-- Display user contact information -->
-    <p>Contact Information for <strong>{{ appointment.post.user.username }}:</strong></p>
-    <p><strong>Full Name:</strong> {{ appointment.post.user.first_name }} {{ appointment.post.user.last_name }}</p>
-    <p><strong>Email:</strong> {{ appointment.post.user.email }}</p>
-    {% if profile %}
-        <p><strong>Phone:</strong> {{ profile.phone }}</p>
-    {% else %}
-        <p>Phone: Not available</p>
-    {% endif %}
+<div class="confirmation-page">
+  <header class="confirmation-heading"><span class="success-mark">{% include 'components/icon.html' with name='check' %}</span><h1>Appointment confirmed</h1><p>Contact the provider to arrange the details.</p></header>
+  <section class="content-panel confirmation-panel">
+    <div class="confirmation-service"><div><span class="badge">Appointment confirmed</span><h2>{{ appointment.post.service.name }}</h2><p>{{ appointment.post.role }}</p></div><div class="price">{{ appointment.post.price_range|floatformat:2 }}<small> / hour</small></div></div>
+    <p class="prose">{{ appointment.post.description }}</p>
+    <div class="confirmation-code"><span>Confirmation number</span><strong>{{ appointment.confirmation_number }}</strong></div>
+    <h3>Your connection</h3>
+    <div class="person-row"><span class="avatar">{{ appointment.post.user.username|first|upper }}</span><div><strong>{{ appointment.post.user.get_full_name|default:appointment.post.user.username }}</strong><span>@{{ appointment.post.user.username }}</span></div></div>
+    <dl class="contact-grid"><div><dt>{% include 'components/icon.html' with name='mail' %}Email</dt><dd>{{ appointment.post.user.email|default:"Not available" }}</dd></div><div><dt>{% include 'components/icon.html' with name='phone' %}Phone</dt><dd>{% if profile %}{{ profile.phone }}{% else %}Not available{% endif %}</dd></div><div><dt>{% include 'components/icon.html' with name='calendar' %}Expires</dt><dd>{{ appointment.post.expiration_date|date:"D, d M Y" }}</dd></div></dl>
+    <a class="button button-full" href="{% url 'my_appointments' %}">View my appointments {% include 'components/icon.html' with name='arrow' %}</a>
+  </section>
 </div>
 {% endblock %}

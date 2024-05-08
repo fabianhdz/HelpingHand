@@ -1,0 +1,8 @@
+<article class="post-card">
+  <div class="post-card-top"><span class="service-icon">{% include 'components/icon.html' with name='spark' %}</span><span class="badge {% if post.role.name|lower == 'client' %}badge-secondary{% endif %}">{% if post.role.name|lower == 'provider' %}Offering help{% elif post.role.name|lower == 'client' %}Looking for help{% else %}{{ post.role.name }}{% endif %}</span></div>
+  <h3><a href="{% url 'post_detail' post.id %}">{{ post.service.name }}</a></h3>
+  <p class="post-description">{{ post.description|truncatechars:155 }}</p>
+  <p class="post-location">{% include 'components/icon.html' with name='pin' %}{{ post.location.city }}, {{ post.location.state }}</p>
+  {% if own %}<p class="post-status"><span class="status-dot {% if not post.is_active %}status-dot-muted{% endif %}"></span>{% if post.is_active %}Active{% else %}Taken{% endif %}</p>{% endif %}
+  <div class="post-card-footer"><span class="price">{{ post.price_range|floatformat:2 }}<small> / hour</small></span><a class="text-link" href="{% url 'post_detail' post.id %}">View details {% include 'components/icon.html' with name='arrow' %}</a></div>
+</article>

@@ -1,55 +1,29 @@
 {% extends 'base.html' %}
-
+{% block title %}Join the community · Helping Hand{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h2 class="mb-4 text-center">Create Account - Step 1</h2>
-            <form method="post" class="needs-validation">
-                {% csrf_token %}
-                <div class="form-group mb-3">
-                    <label for="id_username">Username:</label>
-                    <input type="text" name="username" class="form-control" id="id_username" placeholder="Username" required>
-                    <div class="invalid-feedback">
-                        Please choose a username.
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="id_first_name">First name:</label>
-                        <input type="text" name="first_name" class="form-control" id="id_first_name" placeholder="First name">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="id_last_name">Last name:</label>
-                        <input type="text" name="last_name" class="form-control" id="id_last_name" placeholder="Last name">
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="id_email">Email address:</label>
-                    <input type="email" name="email" class="form-control" id="id_email" placeholder="Email address" required>
-                    <div class="invalid-feedback">
-                        Please enter a valid email address.
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="id_password1">Password:</label>
-                    <input type="password" name="password1" class="form-control" id="id_password1" placeholder="Password" required>
-                    <div class="invalid-feedback">
-                        Please enter a password.
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="id_password2">Password confirmation:</label>
-                    <input type="password" name="password2" class="form-control" id="id_password2" placeholder="Confirm Password" required>
-                    <div class="invalid-feedback">
-                        Please confirm the password.
-                    </div>
-                </div>
-                <div class="form-group mb-4 px-5">
-                    <button type="submit" class="btn btn-primary w-100" name="submit_user">Next</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<a class="back-link" href="{% url 'home' %}">{% include 'components/icon.html' with name='back' %}Back to home</a>
+<div class="form-page signup-page">
+  <header class="form-intro"><h1>Create an account</h1><p>Enter your details to get started.</p></header>
+  <section class="form-panel">
+    <ol class="signup-progress" aria-label="Account setup"><li class="current" aria-current="step"><span>1</span>Your account</li><li><span>2</span>Your profile</li></ol>
+
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      {{ user_form.non_field_errors }}
+      <div class="form-grid">
+        {% for field in user_form %}
+          {% if field.name == 'first_name' or field.name == 'last_name' %}
+            {% include 'components/field.html' %}
+          {% elif field.name == 'email' %}
+            {% include 'components/field.html' with wide=True force_required=True %}
+          {% else %}
+            {% include 'components/field.html' with wide=True %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button type="submit" class="button button-full" name="submit_user">Continue {% include 'components/icon.html' with name='arrow' %}</button>
+    </form>
+    <p class="form-footnote">Already have an account? <a href="{% url 'home' %}#login">Log in</a></p>
+  </section>
 </div>
 {% endblock %}
